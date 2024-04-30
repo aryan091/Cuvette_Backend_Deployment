@@ -3,6 +3,7 @@ const db = require("./config/db");
 const Post = require("./models/Post");
 const dotenv = require("dotenv").config();
 const app = express();
+const User = require("./models/User");
 
 const port = process.env.PORT || 3000;
 app.use(express.json());
@@ -13,8 +14,8 @@ db()
   .catch((err) => console.log(err));
 
 
-app.get("/api/", (req, res) => {
-    res.status(200).json({message:'Api is working fine :)'})
+app.get("/api", (req, res) => {
+    res.status(200).json({message:'Api is working ✅ :)'})
 })
 
 // Fetching all the posts
@@ -45,6 +46,19 @@ app.post("/api/posts/", (req, res) => {
 
     newPost.save().then((data) => {
         res.status(200).json({message: "Post created successfully",data:data})
+    }).catch((err) => {
+        res.status(500).json({message: err})
+    })
+})
+
+app.post("/api/users/", (req, res) => {
+    let newUser = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
+    })
+
+    newUser.save().then((data) => {
+        res.status(200).json({message: "User created successfully",data:data})
     }).catch((err) => {
         res.status(500).json({message: err})
     })
